@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -44,34 +44,60 @@ class MyAppState extends ChangeNotifier {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _MyHomePageState();
+  }
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  var selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Row(
-          children: [
-            SafeArea(
-                child: NavigationRail(
-              destinations: [
-                NavigationRailDestination(
-                    icon: Icon(Icons.home), label: Text("Home")),
-                NavigationRailDestination(
-                    icon: Icon(Icons.favorite), label: Text("Favourites")),
-              ],
-              selectedIndex: 0,
-              onDestinationSelected: (value) =>
-                  {print("Selected Destination : $value")},
-            )),
-            Expanded(
-                child: Container(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: GeneratorPage(),
-            ))
-          ],
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = GeneratorPage();
+        break;
+      case 1:
+        page = Placeholder();
+        break;
+      default:
+        throw UnimplementedError();
+    }
+    return LayoutBuilder(builder: (context, constraints) {
+      return Scaffold(
+        body: Center(
+          child: Row(
+            children: [
+              SafeArea(
+                  child: NavigationRail(
+                extended: constraints.maxWidth >= 600,
+                destinations: [
+                  NavigationRailDestination(
+                      icon: Icon(Icons.home), label: Text("Home")),
+                  NavigationRailDestination(
+                      icon: Icon(Icons.favorite), label: Text("Favourites")),
+                ],
+                selectedIndex: selectedIndex,
+                onDestinationSelected: (value) => {
+                  setState(() {
+                    print("Selected Destination : $value");
+                    selectedIndex = value;
+                  })
+                },
+              )),
+              Expanded(
+                  child: Container(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: page,
+              ))
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
