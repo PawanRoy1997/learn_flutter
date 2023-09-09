@@ -1,5 +1,7 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/screens/favourites_page.dart';
+import 'package:learn_flutter/screens/generator_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -61,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = GeneratorPage();
         break;
       case 1:
-        page = Placeholder();
+        page = FavouritesPage();
         break;
       default:
         throw UnimplementedError();
@@ -101,42 +103,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class GeneratorPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-    IconData icon = (appState.favourites.contains(pair))
-        ? Icons.favorite
-        : Icons.favorite_border;
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        BigCard(pair: pair),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavourite();
-                },
-                icon: Icon(icon),
-                label: Text('Like')),
-            SizedBox(
-              width: 10,
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: Text('Next')),
-          ],
-        )
-      ],
-    );
-  }
-}
 
 class BigCard extends StatelessWidget {
   const BigCard({
